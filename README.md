@@ -1,1 +1,2 @@
-# -PL-SQL-and-Gmail-or-UTL_SMTP-with-SSL-
+Stunnel
+Since UTL_SMTP does not support SSL, I will use a third party tool to "wrap" my connection. There are probably any number of tools which can do this, but Stunnel is quite often referred to, and very easy to install and configure. For nix systems, I suggest checking the Examples-page on stunnel.org, this is a Windows-specific explanation. This part of the post is based on a thread on ez.no.
