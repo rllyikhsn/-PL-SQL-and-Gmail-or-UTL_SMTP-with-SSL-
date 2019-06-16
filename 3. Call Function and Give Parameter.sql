@@ -1,4 +1,4 @@
 begin
-   apex_mail_p.mail('<your gmail address>', '<recipient address>', '<Subject>', '<message body>');
+   apex_mail_p.mail('<your gmail address>', '<recipient address>', '<Subject>', '<message body>','<cc>','<bcc>');
 end;
 /

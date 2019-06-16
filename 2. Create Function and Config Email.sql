@@ -1,7 +1,7 @@
 create or replace package apex_mail_p
 is
    g_smtp_host      varchar2 (256)     := 'localhost';
-   g_smtp_port      pls_integer        := 25;
+   g_smtp_port      pls_integer        := 1925;
    g_smtp_domain    varchar2 (256)     := 'gmail.com';
    g_mailer_id constant varchar2 (256) := 'Mailer by Oracle UTL_SMTP';
    -- send mail using UTL_SMTP
@@ -10,10 +10,13 @@ is
     , p_recipient in varchar2
     , p_subject in varchar2
     , p_message in varchar2
+    , p_cc in varchar2
+    , p_bcc in varchar2
    );
 end;
 /
-create or replace package body apex_mail_p
+
+CREATE OR REPLACE package body SYS.apex_mail_p
 is
    -- Write a MIME header
    procedure write_mime_header (
@@ -32,6 +35,8 @@ is
     , p_recipient in varchar2
     , p_subject in varchar2
     , p_message in varchar2
+    , p_cc in varchar2
+    , p_bcc in varchar2
    )
    is
       l_conn           utl_smtp.connection;
@@ -46,8 +51,8 @@ is
       l_conn   := utl_smtp.open_connection (g_smtp_host, g_smtp_port);
       utl_smtp.ehlo(l_conn, g_smtp_domain);  
       utl_smtp.command(l_conn, 'auth login');
-      utl_smtp.command(l_conn,utl_encode.text_encode('xxx@gmail.com', nls_charset, 1));
-      utl_smtp.command(l_conn, utl_encode.text_encode('xxx', nls_charset, 1));
+      utl_smtp.command(l_conn,utl_encode.text_encode('xxxx@gmail.com', nls_charset, 1));
+      utl_smtp.command(l_conn, utl_encode.text_encode('xxxxpassword', nls_charset, 1));
       -- set from/recipient
       utl_smtp.command(l_conn, 'MAIL FROM: <'||p_sender||'>');
       utl_smtp.command(l_conn, 'RCPT TO: <'||p_recipient||'>');
@@ -56,6 +61,8 @@ is
       write_mime_header (l_conn, 'From', p_sender);
       write_mime_header (l_conn, 'To', p_recipient);
       write_mime_header (l_conn, 'Subject', p_subject);
+      write_mime_header (l_conn, 'CC', p_cc);
+      write_mime_header (l_conn, 'BCC', p_bcc);
       write_mime_header (l_conn, 'Content-Type', 'text/plain');
       write_mime_header (l_conn, 'X-Mailer', g_mailer_id);
       utl_smtp.write_data (l_conn, utl_tcp.crlf);
